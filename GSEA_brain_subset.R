@@ -1,4 +1,10 @@
-Convert("/home/bnvlab2/scVI_brain/no_erythocytes/adata_subset_ages.h5ad", dest = 'h5Seurat', overwrite = T)
+#Convert("/home/bnvlab2/scVI_brain/no_erythocytes/adata_subset_ages.h5ad", dest = 'h5Seurat', overwrite = T)
+
+library(escape)
+library(msigdbr)
+library(Seurat)
+library(dplyr)
+
 
 
 brain_subset <- LoadH5Seurat('/home/bnvlab2/scVI_brain_organoids/no_erythocytes_atlas/brain_subset_ages_as_organoid.h5seurat',   assays    = "RNA",        # <- pick one
@@ -54,7 +60,7 @@ pathways <- c('GOBP_AMYLOID_BETA_METABOLIC_PROCESS', 'GOBP_AMYLOID_FIBRIL_FORMAT
 
 geneste_C5 <- getGeneSets(library = "C5") 
 
-filtered_gene_sets_C5_2 <- geneste_C5[names(geneste_C5) %in% pathways]
+# filtered_gene_sets_C5_2 <- geneste_C5[names(geneste_C5) %in% pathways]
 
 
 ES_brain <- enrichIt(obj = brain_subset,
