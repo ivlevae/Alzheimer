@@ -1,0 +1,94 @@
+library(effsize)  
+
+
+### ES2 - object with pathways 
+all_res <- list()
+pathway_cols <- intersect(names(gs), colnames(ES2))
+
+
+grp_col   <- "True_Condition_PSEN"
+grp_mut   <- "PSEN1 E280A"   
+grp_wt    <- "PSEN1WT"       
+min_cells <- 3              
+
+for (ct in unique(ES2$cell_class)) {
+  message(ct)
+  ES2_ct <- ES2[ES2$cell_class == ct, , drop = FALSE]
+  print(table(ES2_ct[[grp_col]]))
+  
+
+  res <- getSignificance(
+    ES2_ct, group = grp_col, gene.sets = gs, fit = "Wilcoxon"
+  )
+  res$pathway   <- rownames(res)
+  res$cell_type <- ct
+  
+
+  eff <- t(sapply(res$pathway, function(pw) {
+    x   <- as.numeric(ES2_ct[[pw]])
+    g   <- ES2_ct[[grp_col]]
+    mut <- x[g == grp_mut]; mut <- mut[is.finite(mut)]
+    wt  <- x[g == grp_wt];  wt  <- wt[is.finite(wt)]
+    if (length(mut) < min_cells || length(wt) < min_cells)
+      return(c(median_diff = NA_real_, cliff_delta = NA_real_))
+    
+    median_diff <- median(mut) - median(wt)                
+    median_mutant <- median(mut)
+    median_wt <- median(wt)  
+    # Cliff's delta via Mann-Whitney U (fast, tie-aware)
+    W  <- suppressWarnings(wilcox.test(mut, wt)$statistic)
+    cd <- as.numeric(2 * W / (length(mut) * length(wt)) - 1)
+
+    c(
+      median_mutant = median_mutant,
+      median_wt     = median_wt,
+      median_diff   = median_diff,
+      cliff_delta   = cd
+    )
+  }))
+  
+  res <- cbind(res, eff)
+  all_res[[ct]] <- res
+}
+
+output <- do.call(rbind, all_res)
+View(output)
+
+
+output_sig <- subset(output, FDR < 0.05)
+
+output_sig$cell_type
+View(output_sig)
+output_sig$pathway
+df_full <- output_sig %>%
+  mutate(
+    cell_type = factor(cell_type, levels = cell_order),
+    pathway   = factor(pathway,   levels = gs)
+  ) %>%
+  complete(cell_type, pathway, fill = list(cliff_delta = NA_real_))
+
+
+
+ggplot(df_full, aes(x = pathway, y = cell_type, fill = cliff_delta)) +
+  geom_tile(color = "white", linewidth = 0.2) +
+  scale_fill_gradient2(low = "blue", mid = "white", high = "red", midpoint = 0,    limits = c(-0.8, 0.8),   
+                       na.value = "grey80", name = "logFC") +
+  theme_minimal(base_size = 10) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        panel.grid = element_blank())
+
+
+mat <- df_full %>%
+  select(cell_class, pathway, log2FC) %>%
+  pivot_wider(names_from = pathway, values_from = log2FC) %>%
+  column_to_rownames("cell_class") %>%
+  as.matrix()
+library(tibble)
+library(pheatmap)
+pheatmap(mat, 
+         cluster_rows = TRUE, cluster_cols = TRUE,
+         clustering_distance_rows = "correlation",
+         clustering_distance_cols = "correlation",
+         color = colorRampPalette(c("blue","white","red"))(101),
+         breaks = seq(-2, 2, length.out = 101),
+         na_col = "grey80", border_color = "white")
