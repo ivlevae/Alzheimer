@@ -6,11 +6,9 @@ The analysis is separated into the following parts:
 
 1. scRNA-seq reference data processing and quality control
 
-2. scRNA-seq dataset integration and cell-class annotation
+2. Brain organoid preprocessing and reference-based cell class and age mapping
 
-3. Brain organoid preprocessing and reference-based cell-class mapping
-
-4. Downstream analysis, including cell-type composition, differential gene expression, developmental age estimation, trajectory inference, and pathway analysis
+3. Downstream analysis, including cell class composition, jaccard similarity, trajectory inference, and pathway analysis
 
 Manuscript
 
