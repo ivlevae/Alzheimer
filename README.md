@@ -15,7 +15,7 @@ The analysis is separated into the following parts:
 Manuscript
 
 The manuscript is available on bioRxiv:
-[Manuscript]((https://www.biorxiv.org/content/10.64898/2026.09.18.752796v1)) <br />
+[Manuscript](https://www.biorxiv.org/content/10.64898/2026.09.18.752796v1) <br />
 
 
 HuDeHA integrates early embryonic, prenatal, and postnatal single-cell datasets, capturing diverse neuronal, glial, and other cell lineages. The atlas serves as a reference for cell-class annotation and comparison of in vitro brain organoid models with in vivo human neurodevelopmental trajectories.
