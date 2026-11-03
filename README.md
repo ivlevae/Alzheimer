@@ -4,20 +4,18 @@ This repository contains the bioinformatics analysis performed to construct the 
 
 The analysis is separated into the following parts:
 
-scRNA-seq reference data processing and quality control
+1. scRNA-seq reference data processing and quality control
 
-scRNA-seq dataset integration and cell-class annotation
+2. scRNA-seq dataset integration and cell-class annotation
 
-Brain organoid preprocessing and reference-based cell-class mapping
+3. Brain organoid preprocessing and reference-based cell-class mapping
 
-Downstream analysis, including cell-type composition, differential gene expression, developmental age estimation, trajectory inference, and pathway analysis
+4. Downstream analysis, including cell-type composition, differential gene expression, developmental age estimation, trajectory inference, and pathway analysis
 
 Manuscript
 
 The manuscript is available on bioRxiv:
+[Manuscript]([https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE176204](https://www.biorxiv.org/content/10.64898/2026.09.18.752796v1)) <br />
 
-Human Developing Hippocampus Atlas – bioRxiv
-
-Human Developing Hippocampus Atlas (HuDeHA)
 
 HuDeHA integrates early embryonic, prenatal, and postnatal single-cell datasets, capturing diverse neuronal, glial, and other cell lineages. The atlas serves as a reference for cell-class annotation and comparison of in vitro brain organoid models with in vivo human neurodevelopmental trajectories.
